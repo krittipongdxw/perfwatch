@@ -4,7 +4,16 @@
         <meta charset="UTF-8" />
         <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" /> -->
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="
+            default-src 'self'; 
+            script-src 'self' https://cdn.tailwindcss.com; 
+            style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; 
+            font-src 'self' https://fonts.gstatic.com;
+        "
+        />
+
         <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
         <title>PerfWatch</title>
 
@@ -15,39 +24,279 @@
         <div class="w-full h-[3.909vw] bg-[#000000]"></div>
 
         <div class="flex w-full h-[65.581vw]">
-            <div class="w-[19.544vw] h-full pt-[0.869vw] bg-[#121214]">
-                <div class="flex items-center w-full h-[6.515vw] pl-[1.737vw] cursor-pointer">
-                    <svg width="2.389vw" height="3.04vw" viewBox="0 0 22 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="11" cy="26" r="2" fill="white" />
-                        <path
-                            d="M2.0625 1.01786V16.9643H20.9688C21.2423 16.9643 21.5046 17.0715 21.698 17.2624C21.8913 17.4533 22 17.7122 22 17.9821C22 18.2521 21.8913 18.511 21.698 18.7019C21.5046 18.8928 21.2423 19 20.9688 19H1.03125C0.757746 19 0.495443 18.8928 0.302046 18.7019C0.108649 18.511 0 18.2521 0 17.9821L0 1.01786C0 0.747905 0.108649 0.489009 0.302046 0.298123C0.495443 0.107238 0.757746 0 1.03125 0C1.30475 0 1.56706 0.107238 1.76045 0.298123C1.95385 0.489009 2.0625 0.747905 2.0625 1.01786ZM21.6975 4.45143L14.4787 11.5764C14.2854 11.767 14.0233 11.8741 13.75 11.8741C13.4767 11.8741 13.2146 11.767 13.0213 11.5764L9.625 8.22429L5.885 11.9157C5.68955 12.0957 5.43091 12.1938 5.16362 12.1892C4.89634 12.1847 4.64128 12.0779 4.45225 11.8913C4.26322 11.7047 4.15499 11.453 4.15038 11.1892C4.14576 10.9253 4.24512 10.6701 4.4275 10.4771L8.89625 6.06643C9.08961 5.87582 9.35172 5.76875 9.625 5.76875C9.89828 5.76875 10.1604 5.87582 10.3538 6.06643L13.75 9.41857L20.24 3.01286C20.4355 2.83284 20.6941 2.73477 20.9614 2.73933C21.2287 2.74389 21.4837 2.85072 21.6728 3.03729C21.8618 3.22387 21.97 3.4756 21.9746 3.73942C21.9792 4.00324 21.8799 4.25852 21.6975 4.45143Z"
-                            fill="white"
-                        />
-                    </svg>
-                    <p class="ml-[1.737vw] text-[#FFCC00] text-[1.303vw] font-medium">PC Monitoring</p>
+            <!-- Content -->
+            <div class="flex flex-col gap-[1.737vw] w-[80.456vw] h-full pt-[1.303vw] pl-[3.257vw] pr-[1.846vw]">
+                <div class="flex justify-between w-full h-[25.299vw]">
+                    <div class="relative w-[36.808vw] h-full rounded-[0.434vw] border-[0.109vw] border-[#353638]">
+                        <p class="absolute top-[1.303vw] left-[1.737vw] text-white text-[2.172vw] font-medium">CPU</p>
+
+                        <div class="absolute top-[4.995vw] left-[2.606vw] flex justify-between items-end w-[31.922vw] h-[15.201vw]">
+                            <div class="relative w-[14.332vw] h-full">
+                                <!-- Background circle -->
+                                <div id="cpu-load-bar" class="flex justify-center items-center w-[14.332vw] h-[14.332vw] border-[#121214] rounded-full circle rotate-180">
+                                    <div class="z-10 w-[11.944vw] h-[11.944vw] bg-[#1B1C1E] rounded-full"></div>
+                                </div>
+
+                                <!-- Cover to make 3/4 circle -->
+                                <div class="z-10 absolute bottom-[0.84vw] right-0 w-[7.166vw] h-[7.2vw] bg-[#1B1C1E]">
+                                    <p class="absolute -bottom-[0.7vw] left-[0.6vw] text-[#FFCC00] text-[2.172vw] font-light">Load</p>
+                                </div>
+
+                                <!-- <div class="absolute top-0 left-0 w-[14.332vw] h-[14.332vw] border-[1.194vw] border-blue-500 rounded-full progress-circle"></div> -->
+
+                                <p id="cpu-load" class="z-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-[3.474vw] font-light">32%</p>
+                            </div>
+
+                            <div class="flex flex-col justify-between w-[16.287vw] h-[14.332vw]">
+                                <div class="flex flex-col justify-between w-full h-[3.909vw]">
+                                    <div class="w-full h-[1.086vw] bg-[#121214]">
+                                        <div id="cpu-temp-bar" class="w-[70%] h-full bg-[#FFCC00]"></div>
+                                    </div>
+
+                                    <div class="flex justify-between w-full">
+                                        <p class="text-white text-[1.737vw] font-light">Temperature</p>
+                                        <p id="cpu-temp" class="text-white text-[1.737vw] font-light">70°</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col justify-between w-full h-[3.909vw]">
+                                    <div class="w-full h-[1.086vw] bg-[#121214]">
+                                        <div id="cpu-clock-bar" class="w-[70%] h-full bg-[#FFCC00]"></div>
+                                    </div>
+
+                                    <div class="flex justify-between w-full">
+                                        <p class="text-white text-[1.737vw] font-light">Clock</p>
+                                        <p id="cpu-clock" class="text-white text-[1.737vw] font-light">97MHz</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col justify-between w-full h-[3.909vw]">
+                                    <div class="w-full h-[1.086vw] bg-[#121214]">
+                                        <div id="cpu-fan-bar" class="w-[70%] h-full bg-[#FFCC00]"></div>
+                                    </div>
+
+                                    <div class="flex justify-between w-full">
+                                        <p class="text-white text-[1.737vw] font-light">Fan</p>
+                                        <p id="cpu-fan" class="text-white text-[1.737vw] font-light">N/A</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="absolute top-[21.39vw] left-[1.737vw] flex gap-[0.869vw] items-center h-[2.606vw]">
+                            <div class="w-[1.086vw] h-[1.086vw] bg-[#FFCC00] rounded-[0.217vw]"></div>
+                            <p id="cpu-model" class="text-[1.737vw] text-[#8C8C94] font-light">AMD Ryzen 5 5600</p>
+                        </div>
+                    </div>
+
+                    <div class="relative w-[36.808vw] h-full rounded-[0.434vw] border-[0.109vw] border-[#353638]">
+                        <p class="absolute top-[1.303vw] left-[1.737vw] text-white text-[2.172vw] font-medium">GPU</p>
+
+                        <div class="absolute top-[4.995vw] left-[2.606vw] flex justify-between items-end w-[31.922vw] h-[15.201vw]">
+                            <div class="relative w-[14.332vw] h-full">
+                                <!-- Background circle -->
+                                <div id="gpu-load-bar" class="flex justify-center items-center w-[14.332vw] h-[14.332vw] border-[#121214] rounded-full circle rotate-180">
+                                    <div class="z-10 w-[11.944vw] h-[11.944vw] bg-[#1B1C1E] rounded-full"></div>
+                                </div>
+
+                                <!-- Cover to make 3/4 circle -->
+                                <div class="z-10 absolute bottom-[0.84vw] right-0 w-[7.166vw] h-[7.2vw] bg-[#1B1C1E]">
+                                    <p class="absolute -bottom-[0.7vw] left-[0.6vw] text-[#FFCC00] text-[2.172vw] font-light">Load</p>
+                                </div>
+
+                                <!-- <div class="absolute top-0 left-0 w-[14.332vw] h-[14.332vw] border-[1.194vw] border-blue-500 rounded-full progress-circle"></div> -->
+
+                                <p id="gpu-load" class="z-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-[3.474vw] font-light">32%</p>
+                            </div>
+
+                            <div class="flex flex-col justify-between w-[16.287vw] h-[14.332vw]">
+                                <div class="flex flex-col justify-between w-full h-[3.909vw]">
+                                    <div class="w-full h-[1.086vw] bg-[#121214]">
+                                        <div id="gpu-temp-bar" class="w-[70%] h-full bg-[#FFCC00]"></div>
+                                    </div>
+
+                                    <div class="flex justify-between w-full">
+                                        <p class="text-white text-[1.737vw] font-light">Temperature</p>
+                                        <p id="gpu-temp" class="text-white text-[1.737vw] font-light">70°</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col justify-between w-full h-[3.909vw]">
+                                    <div class="w-full h-[1.086vw] bg-[#121214]">
+                                        <div id="gpu-clock-bar" class="w-[70%] h-full bg-[#FFCC00]"></div>
+                                    </div>
+
+                                    <div class="flex justify-between w-full">
+                                        <p class="text-white text-[1.737vw] font-light">Clock</p>
+                                        <p id="gpu-clock" class="text-white text-[1.737vw] font-light">97MHz</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col justify-between w-full h-[3.909vw]">
+                                    <div class="w-full h-[1.086vw] bg-[#121214]">
+                                        <div id="gpu-fan-bar" class="w-[70%] h-full bg-[#FFCC00]"></div>
+                                    </div>
+
+                                    <div class="flex justify-between w-full">
+                                        <p class="text-white text-[1.737vw] font-light">Fan</p>
+                                        <p id="gpu-fan" class="text-white text-[1.737vw] font-light">N/A</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="absolute top-[21.39vw] left-[1.737vw] flex gap-[0.869vw] items-center h-[2.606vw]">
+                            <div class="w-[1.086vw] h-[1.086vw] bg-[#FFCC00] rounded-[0.217vw]"></div>
+                            <p id="gpu-model" class="text-[1.737vw] text-[#8C8C94] font-light">AMD Radeon RX6600</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex items-center w-full h-[6.515vw] pl-[1.737vw] cursor-pointer">
-                    <svg width="2.389vw" height="1.954vw" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+                <div class="flex justify-between w-full h-[20.521vw]">
+                    <div class="relative w-[23.996vw] h-full border-[0.109vw] border-[#353638] rounded-[0.434vw]">
+                        <p class="absolute top-[1.303vw] left-[1.737vw] text-white text-[2.172vw] font-medium">RAM</p>
+
+                        <div class="absolute top-[4.56vw] left-[6.515vw] w-[10.858vw] h-[11.401vw]">
+                            <!-- Background circle -->
+                            <div id="memory-load-bar" class="flex justify-center items-center w-[10.858vw] h-[10.858vw] rounded-full circle rotate-180">
+                                <div class="z-10 w-[9.338vw] h-[9.338vw] bg-[#1B1C1E] rounded-full"></div>
+                            </div>
+
+                            <!-- Cover to make 3/4 circle -->
+                            <div class="z-10 absolute bottom-[0.543vw] right-0 w-[5.429vw] h-[5.429vw] bg-[#1B1C1E]">
+                                <p class="absolute -bottom-[0.7vw] left-[0.6vw] text-[#FFCC00] text-[1.737vw] font-light">Load</p>
+                            </div>
+
+                            <p id="memory-load" class="z-20 absolute top-[4.017vw] left-[3.366vw] text-white text-[2.172vw] font-light">32%</p>
+                        </div>
+
+                        <div class="absolute top-[16.504vw] left-[1.737vw] flex justify-between w-[20.521vw] h-[2.714vw]">
+                            <div class="flex gap-[0.869vw] items-center h-full">
+                                <div class="w-[1.086vw] h-[1.086vw] bg-[#FFCC00] rounded-[0.217vw]"></div>
+                                <p class="text-[#8C8C94] text-[1.737vw] font-light">Used</p>
+                            </div>
+
+                            <p id="memory-used" class="text-[#8C8C94] text-[1.737vw] font-light">8.0/16.0GB</p>
+                        </div>
+                    </div>
+
+                    <div class="relative w-[23.996vw] h-full border-[0.109vw] border-[#353638] rounded-[0.434vw]">
+                        <p class="absolute top-[1.303vw] left-[1.737vw] text-white text-[2.172vw] font-medium">Network</p>
+
+                        <div class="absolute top-[4.235vw] right-[4.995vw] flex flex-col justify-center items-end h-[8.903vw]">
+                            <div class="flex items-end">
+                                <p id="network-transferred" class="text-[3.474vw] text-[#8C8C94] font-light leading-none">179</p>
+                                <p class="text-[2.172vw] text-[#8C8C94] font-light leading-none">KB/s</p>
+                            </div>
+                            <div class="flex items-start">
+                                <p id="network-received" class="text-[3.474vw] text-[#8C8C94] font-light leading-none">1790</p>
+                                <p class="mb-[0.5vw] text-[2.172vw] text-[#8C8C94] font-light leading-none">KB/s</p>
+                            </div>
+                        </div>
+
+                        <div class="absolute top-[5.32vw] left-[19.327vw] flex flex-col justify-between w-[2.172vw] h-[6.406vw]">
+                            <svg width="2.172vw" height="3.04vw" viewBox="0 0 20 28" fill="#FFCC00" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0 10.0358H8V27.9398L12.02 28V10.0358H20L10 0L0 10.0358Z" />
+                            </svg>
+
+                            <svg class="rotate-180" width="2.172vw" height="3.04vw" viewBox="0 0 20 28" fill="#121214" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0 10.0358H8V27.9398L12.02 28V10.0358H20L10 0L0 10.0358Z" />
+                            </svg>
+                        </div>
+
+                        <div class="absolute top-[16.504vw] left-[1.737vw] flex justify-between w-[20.521vw] h-[2.714vw]">
+                            <div class="flex gap-[0.869vw] items-center h-full">
+                                <div class="w-[1.086vw] h-[1.086vw] bg-[#FFCC00] rounded-[0.217vw]"></div>
+                                <p class="text-[#8C8C94] text-[1.737vw] font-light">Latency</p>
+                            </div>
+
+                            <p id="network-latency" class="text-[#8C8C94] text-[1.737vw] font-light">40ms</p>
+                        </div>
+                    </div>
+
+                    <div class="relative w-[23.996vw] h-full border-[0.109vw] border-[#353638] rounded-[0.434vw]">
+                        <p class="absolute top-[1.303vw] left-[1.737vw] text-white text-[2.172vw] font-medium">Storage</p>
+
+                        <div class="absolute top-[4.669vw] left-[1.846vw] flex flex-col gap-[0.869vw] w-[20.087vw] h-[13.464vw]">
+                            <div id="first-drive" class="flex justify-between items-center w-full h-[3.909vw]">
+                                <p id="first-drive-name" class="text-[2.606vw] text-white font-light">C:\</p>
+
+                                <div class="relative w-[15.635vw] h-[2.606vw] bg-[#121214]">
+                                    <div id="first-drive-bar" class="w-[50%] h-full bg-[#ffbb00]"></div>
+
+                                    <p id="first-drive-used" class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[1.303vw] text-white font-light text-nowrap">322GB / 477GB</p>
+                                </div>
+                            </div>
+
+                            <div id="second-drive" class="flex justify-between items-center w-full h-[3.909vw]">
+                                <p id="second-drive-name" class="text-[2.606vw] text-white font-light">D:\</p>
+
+                                <div class="relative w-[15.635vw] h-[2.606vw] bg-[#121214]">
+                                    <div id="second-drive-bar" class="w-[50%] h-full bg-[#ffbb00]"></div>
+
+                                    <p id="second-drive-used" class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[1.303vw] text-white font-light text-nowrap">322GB / 477GB</p>
+                                </div>
+                            </div>
+
+                            <div id="third-drive" class="flex justify-between items-center w-full h-[3.909vw]">
+                                <p id="third-drive-name" class="text-[2.606vw] text-white font-light">E:\</p>
+
+                                <div class="relative w-[15.635vw] h-[2.606vw] bg-[#121214]">
+                                    <div id="third-drive-bar" class="w-[50%] h-full bg-[#ffbb00]"></div>
+
+                                    <p id="third-drive-used" class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[1.303vw] text-white font-light text-nowrap">322GB / 477GB</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nav -->
+            <div class="w-[19.544vw] h-full bg-[#121214]">
+                <div class="w-full h-[60.803vw] pt-[0.869vw] border-b-[0.109vw] border-b-[#1D1D1F]">
+                    <div class="flex items-center w-full h-[6.515vw] pl-[1.737vw] cursor-pointer">
+                        <svg class="fill-[#FFCC00]" width="2.389vw" height="3.04vw" viewBox="0 0 22 28" fill="#FFCC00" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="11" cy="26" r="2" />
+                            <path
+                                d="M2.0625 1.01786V16.9643H20.9688C21.2423 16.9643 21.5046 17.0715 21.698 17.2624C21.8913 17.4533 22 17.7122 22 17.9821C22 18.2521 21.8913 18.511 21.698 18.7019C21.5046 18.8928 21.2423 19 20.9688 19H1.03125C0.757746 19 0.495443 18.8928 0.302046 18.7019C0.108649 18.511 0 18.2521 0 17.9821L0 1.01786C0 0.747905 0.108649 0.489009 0.302046 0.298123C0.495443 0.107238 0.757746 0 1.03125 0C1.30475 0 1.56706 0.107238 1.76045 0.298123C1.95385 0.489009 2.0625 0.747905 2.0625 1.01786ZM21.6975 4.45143L14.4787 11.5764C14.2854 11.767 14.0233 11.8741 13.75 11.8741C13.4767 11.8741 13.2146 11.767 13.0213 11.5764L9.625 8.22429L5.885 11.9157C5.68955 12.0957 5.43091 12.1938 5.16362 12.1892C4.89634 12.1847 4.64128 12.0779 4.45225 11.8913C4.26322 11.7047 4.15499 11.453 4.15038 11.1892C4.14576 10.9253 4.24512 10.6701 4.4275 10.4771L8.89625 6.06643C9.08961 5.87582 9.35172 5.76875 9.625 5.76875C9.89828 5.76875 10.1604 5.87582 10.3538 6.06643L13.75 9.41857L20.24 3.01286C20.4355 2.83284 20.6941 2.73477 20.9614 2.73933C21.2287 2.74389 21.4837 2.85072 21.6728 3.03729C21.8618 3.22387 21.97 3.4756 21.9746 3.73942C21.9792 4.00324 21.8799 4.25852 21.6975 4.45143Z"
+                            />
+                        </svg>
+                        <p class="ml-[1.737vw] text-[#FFCC00] text-[1.303vw] font-medium">PC Monitoring</p>
+                    </div>
+                    <div class="flex items-center w-full h-[6.515vw] pl-[1.737vw] cursor-pointer">
+                        <svg width="2.389vw" height="1.954vw" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M1.14641 8.73522C1.04981 8.5029 1 8.25287 1 8.00022C1 7.74757 1.04981 7.49754 1.14641 7.26522C1.93244 5.34522 3.18932 3.73022 4.76139 2.61822C6.33346 1.50622 8.15457 0.945218 10 1.00422C11.8454 0.945218 13.6656 1.50622 15.2386 2.61822C16.8117 3.73022 18.0676 5.34522 18.8536 7.26522C18.9502 7.49754 19 7.74757 19 8.00022C19 8.25287 18.9502 8.5029 18.8536 8.73522C18.0676 10.6552 16.8107 12.2702 15.2386 13.3822C13.6665 14.4942 11.8454 15.0552 10 14.9962C8.15457 15.0552 6.33443 14.4942 4.76139 13.3822C3.18835 12.2702 1.93244 10.6552 1.14738 8.73522"
+                                stroke="#48474F"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                            <path
+                                d="M9.99999 11.5002C10.4471 11.5002 10.8899 11.4097 11.303 11.2338C11.7161 11.0579 12.0914 10.8001 12.4076 10.4751C12.7238 10.1501 12.9746 9.76428 13.1457 9.33964C13.3168 8.915 13.4048 8.45987 13.4048 8.00024C13.4048 7.54062 13.3168 7.08549 13.1457 6.66085C12.9746 6.23621 12.7238 5.85038 12.4076 5.52537C12.0914 5.20037 11.7161 4.94256 11.303 4.76667C10.8899 4.59077 10.4471 4.50024 9.99999 4.50024C9.09697 4.50024 8.23093 4.86899 7.5924 5.52537C6.95386 6.18175 6.59514 7.07199 6.59514 8.00024C6.59514 8.9285 6.95386 9.81874 7.5924 10.4751C8.23093 11.1315 9.09697 11.5002 9.99999 11.5002Z"
+                                stroke="#48474F"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+
+                        <p class="ml-[1.737vw] text-[#48474F] text-[1.303vw] font-medium">System Specs</p>
+                    </div>
+                </div>
+                <div class="flex items-center w-full h-[4.777vw] pl-[1.737vw] cursor-pointer">
+                    <svg width="2.389vw" height="2.389vw" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8.50002 12.5999C10.4899 12.5999 12.1081 10.9853 12.1081 8.9999C12.1081 7.0145 10.4899 5.3999 8.50002 5.3999C6.51015 5.3999 4.89191 7.0145 4.89191 8.9999C4.89191 10.9853 6.51015 12.5999 8.50002 12.5999ZM8.50002 7.1999C9.47782 7.1999 10.3041 8.0243 10.3041 8.9999C10.3041 9.9755 9.47782 10.7999 8.50002 10.7999C7.52222 10.7999 6.69597 9.9755 6.69597 8.9999C6.69597 8.0243 7.52222 7.1999 8.50002 7.1999Z" fill="#48474F" />
                         <path
-                            d="M1.14641 8.73522C1.04981 8.5029 1 8.25287 1 8.00022C1 7.74757 1.04981 7.49754 1.14641 7.26522C1.93244 5.34522 3.18932 3.73022 4.76139 2.61822C6.33346 1.50622 8.15457 0.945218 10 1.00422C11.8454 0.945218 13.6656 1.50622 15.2386 2.61822C16.8117 3.73022 18.0676 5.34522 18.8536 7.26522C18.9502 7.49754 19 7.74757 19 8.00022C19 8.25287 18.9502 8.5029 18.8536 8.73522C18.0676 10.6552 16.8107 12.2702 15.2386 13.3822C13.6665 14.4942 11.8454 15.0552 10 14.9962C8.15457 15.0552 6.33443 14.4942 4.76139 13.3822C3.18835 12.2702 1.93244 10.6552 1.14738 8.73522"
-                            stroke="#48474F"
-                            stroke-width="1.5"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        />
-                        <path
-                            d="M9.99999 11.5002C10.4471 11.5002 10.8899 11.4097 11.303 11.2338C11.7161 11.0579 12.0914 10.8001 12.4076 10.4751C12.7238 10.1501 12.9746 9.76428 13.1457 9.33964C13.3168 8.915 13.4048 8.45987 13.4048 8.00024C13.4048 7.54062 13.3168 7.08549 13.1457 6.66085C12.9746 6.23621 12.7238 5.85038 12.4076 5.52537C12.0914 5.20037 11.7161 4.94256 11.303 4.76667C10.8899 4.59077 10.4471 4.50024 9.99999 4.50024C9.09697 4.50024 8.23093 4.86899 7.5924 5.52537C6.95386 6.18175 6.59514 7.07199 6.59514 8.00024C6.59514 8.9285 6.95386 9.81874 7.5924 10.4751C8.23093 11.1315 9.09697 11.5002 9.99999 11.5002Z"
-                            stroke="#48474F"
-                            stroke-width="1.5"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            d="M0.24192 12.7224L1.14395 14.2794C1.62293 15.1047 2.77572 15.4143 3.60649 14.9364L4.08366 14.661C4.60488 15.0715 5.18039 15.4083 5.79391 15.6618V16.2C5.79391 17.1927 6.60303 18 7.59797 18H9.40203C10.397 18 11.2061 17.1927 11.2061 16.2V15.6618C11.8196 15.4086 12.3951 15.0721 12.9163 14.6619L13.3935 14.9373C14.2261 15.4143 15.3762 15.1065 15.857 14.2794L16.7581 12.7233C16.9974 12.31 17.0623 11.8188 16.9387 11.3577C16.815 10.8966 16.5129 10.5034 16.0987 10.2645L15.6432 10.0017C15.7403 9.33802 15.7403 8.66378 15.6432 8.0001L16.0987 7.7373C16.5129 7.49845 16.815 7.10523 16.9387 6.64413C17.0623 6.18304 16.9974 5.69181 16.7581 5.2785L15.857 3.7224C15.378 2.8944 14.2261 2.5839 13.3935 3.0636L12.9163 3.339C12.3951 2.92848 11.8196 2.5917 11.2061 2.3382V1.8C11.2061 0.8073 10.397 0 9.40203 0H7.59797C6.60303 0 5.79391 0.8073 5.79391 1.8V2.3382C5.18044 2.59142 4.60493 2.92789 4.08366 3.3381L3.60649 3.0627C2.77301 2.5848 1.62203 2.8944 1.14305 3.7215L0.24192 5.2776C0.00262248 5.69091 -0.062343 6.18214 0.0613111 6.64323C0.184965 7.10433 0.487113 7.49755 0.901303 7.7364L1.35683 7.9992C1.25984 8.66259 1.25984 9.33651 1.35683 9.9999L0.901303 10.2627C0.487417 10.5021 0.185569 10.8954 0.0619585 11.3565C-0.0616519 11.8176 0.00306652 12.3088 0.24192 12.7224ZM3.24207 10.2402C3.14019 9.83462 3.08839 9.41813 3.08782 9C3.08782 8.5842 3.14014 8.1666 3.24117 7.7598C3.28859 7.57019 3.27287 7.37034 3.19638 7.19044C3.1199 7.01053 2.98681 6.86036 2.81721 6.7626L1.80424 6.1776L2.70446 4.6215L3.73728 5.2173C3.90584 5.31411 4.10124 5.35397 4.29436 5.33094C4.48747 5.30791 4.66796 5.22322 4.8089 5.0895C5.4197 4.51115 6.1554 4.08039 6.95933 3.8304C7.14409 3.77412 7.30586 3.66015 7.42083 3.50526C7.53579 3.35037 7.59789 3.16274 7.59797 2.97V1.8H9.40203V2.97C9.40211 3.16274 9.4642 3.35037 9.57917 3.50526C9.69414 3.66015 9.85591 3.77412 10.0407 3.8304C10.8446 4.08039 11.5803 4.51115 12.1911 5.0895C12.332 5.22322 12.5125 5.30791 12.7056 5.33094C12.8988 5.35397 13.0942 5.31411 13.2627 5.2173L14.2946 4.6224L15.1967 6.1785L14.1828 6.7626C14.0132 6.86036 13.8801 7.01053 13.8036 7.19044C13.7271 7.37034 13.7114 7.57019 13.7588 7.7598C13.8599 8.1666 13.9122 8.5842 13.9122 9C13.9122 9.4158 13.8599 9.8325 13.7579 10.2402C13.7106 10.4299 13.7264 10.6298 13.8031 10.8097C13.8797 10.9897 14.013 11.1398 14.1828 11.2374L15.1958 11.8215L14.2955 13.3776L13.2627 12.7827C13.0942 12.6859 12.8988 12.646 12.7056 12.6691C12.5125 12.6921 12.332 12.7768 12.1911 12.9105C11.5803 13.4888 10.8446 13.9196 10.0407 14.1696C9.85591 14.2259 9.69414 14.3399 9.57917 14.4947C9.4642 14.6496 9.40211 14.8373 9.40203 15.03L9.40383 16.2H7.59797V15.03C7.59789 14.8373 7.53579 14.6496 7.42083 14.4947C7.30586 14.3399 7.14409 14.2259 6.95933 14.1696C6.1554 13.9196 5.4197 13.4888 4.8089 12.9105C4.6686 12.7756 4.48795 12.6902 4.29447 12.6673C4.101 12.6444 3.90532 12.6852 3.73728 12.7836L2.70536 13.3794L1.80333 11.8233L2.81721 11.2374C2.98697 11.1398 3.12025 10.9897 3.1969 10.8097C3.27356 10.6298 3.28941 10.4299 3.24207 10.2402Z"
+                            fill="#48474F"
                         />
                     </svg>
 
-                    <p class="ml-[1.737vw] text-[#48474F] text-[1.303vw] font-medium">System Specs</p>
+                    <p class="ml-[1.737vw] text-[#48474F] text-[1.303vw] font-medium">Settings</p>
                 </div>
             </div>
-            <div class="w-[80.456vw] h-full"></div>
         </div>
 
         <script type="module" src="script.js"></script>
