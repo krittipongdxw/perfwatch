@@ -1,10 +1,12 @@
 const { app, BrowserWindow } = require("electron/main");
 const path = require("path");
 
+app.disableHardwareAcceleration();
+
 const createWindow = () => {
     const win = new BrowserWindow({
         width: 921,
-        height: 640, // 576
+        height: 640,
         autoHideMenuBar: true,
         frame: false,
         resizable: true,
