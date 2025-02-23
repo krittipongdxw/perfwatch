@@ -2,23 +2,23 @@ const si = require('systeminformation');
 
 async function fetchIPAddress() {
     const networkInterfaces = await si.networkInterfaces();
-    if (networkInterfaces.length == 0) return 'N/A';
+    if (networkInterfaces.length == 0) return null;
 
     for (let networkInterface of networkInterfaces) {
         if (networkInterface.default) return networkInterface.ip4;
     }
     
-    return 'N/A';
+    return null;
 }
 
 async function fetchLatency() {
     const inetLatency = await si.inetLatency();
-    return inetLatency || 'N/A';
+    return inetLatency;
 }
 
 async function fetchTrafficInKBps() {
     const networkStats = await si.networkStats();
-    if (networkStats.length == 0) return { received: 'N/A', transferred: 'N/A' };
+    if (networkStats.length == 0) return { received: 0, transferred: 0 };
 
     let received = 0;
     let transferred = 0;

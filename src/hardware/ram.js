@@ -57,7 +57,7 @@ async function fetchMemoryType() {
 async function fetchMemoryClock() {
     const memLayout = await si.memLayout();
 
-    if (memLayout.length == 0) return 'N/A';
+    if (memLayout.length == 0) return null;
 
     return memLayout[0].clockSpeed;
 }
