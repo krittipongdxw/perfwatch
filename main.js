@@ -10,7 +10,7 @@ const createWindow = () => {
         height: 640,
         autoHideMenuBar: true,
         frame: false,
-        resizable: true,
+        resizable: false,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: true,
