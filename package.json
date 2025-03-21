@@ -1,23 +1,41 @@
 {
-  "name": "electron-tailwind-app",
+  "name": "perfwatch",
   "version": "1.0.0",
   "main": "main.js",
   "build": {
     "nsis": {
+      "include": "your_custom_script.nsh"
+    },
+    "appId": "com.project.perfwatch",
+    "win": {
+      "icon": "assets/perfwatch-logo-1.ico",
+      "target": "nsis",
       "requestedExecutionLevel": "requireAdministrator"
-    }
+    },
+    "productName": "PerfWatch",
+    "files": [
+      "src/**/*",
+      "assets/*",
+      "lib/*",
+      "main.js"
+    ]
   },
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "postinstall": "electron-builder install-app-deps"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Real-Time Performance, Zero Compromise",
   "devDependencies": {
     "autoprefixer": "^10.4.20",
-    "electron": "^34.2.0",
+    "electron": "^34.3.4",
+    "electron-builder": "^25.1.8",
+    "electron-rebuild": "^3.2.9",
     "electron-reload": "^2.0.0-alpha.1",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.0.7"
