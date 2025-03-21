@@ -43,6 +43,18 @@ public class HardwareInfo
         });
     }
 
+    public async Task<object> GetMainboardModel(dynamic input) {
+        return await Task.Run(() =>
+        {
+            foreach (var hardware in _computer.Hardware)
+            {
+                if (hardware.HardwareType == HardwareType.Mainboard) return hardware.Name;
+            }
+
+            return "Undefined";
+        });
+    }
+
     public async Task<object> GetCPUModel(dynamic input) {
         return await Task.Run(() =>
         {
