@@ -6,4 +6,10 @@ async function fetchFsSize() {
     return fsSize;
 }
 
-module.exports = { fetchFsSize };
+async function fetchDiskLayout() {
+    const diskLayout = await si.diskLayout();
+
+    return diskLayout;
+}
+
+module.exports = { fetchFsSize, fetchDiskLayout };

@@ -49,10 +49,19 @@ function fetchMemoryAvailable() {
 async function fetchMemoryType() {
     const memLayout = await si.memLayout();
 
-    if (memLayout.length == 0) return 'Undefined';
+    if (memLayout.length == 0) return null;
 
     return memLayout[0].type;
 }
+
+async function fetchMemoryList() {
+    const memLayout = await si.memLayout();
+
+    if (memLayout.length == 0) return null;
+
+    return memLayout;
+}
+
 
 async function fetchMemoryClock() {
     const memLayout = await si.memLayout();
@@ -63,4 +72,4 @@ async function fetchMemoryClock() {
 }
 
 
-module.exports = { fetchMemoryLoad, fetchMemoryUsed, fetchMemoryAvailable, fetchMemoryType, fetchMemoryClock };
+module.exports = { fetchMemoryLoad, fetchMemoryUsed, fetchMemoryAvailable, fetchMemoryType, fetchMemoryList, fetchMemoryClock };

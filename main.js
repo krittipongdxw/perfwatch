@@ -1,8 +1,9 @@
-const { app, BrowserWindow } = require("electron/main");
+const { app, BrowserWindow, ipcMain, Notification } = require("electron/main");
 const path = require("path");
 
 app.disableHardwareAcceleration();
 
+app.setAppUserModelId('PerfWatch');
 const createWindow = () => {
     const win = new BrowserWindow({
         width: 921,
@@ -23,6 +24,12 @@ const createWindow = () => {
     win.loadFile("./src/interface/index.html");
     win.webContents.openDevTools();
 };
+
+console.log("Icon Path:", path.join(__dirname, "assets", "perfwatch-logo.png"));
+
+ipcMain.on("show-notification", (event, { title, body }) => {
+    new Notification({ title, body, icon: path.join(__dirname, "assets", "perfwatch-logo.ico") }).show();
+});
 
 app.whenReady().then(() => {
     createWindow();

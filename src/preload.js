@@ -1,13 +1,18 @@
-const { contextBridge } = require('electron');
-const { fetchHardwareInfo } = require('./hardware/hardware');
+const { contextBridge, ipcRenderer } = require('electron');
+const { fetchHardwareInfo, fetchMainboardModel } = require('./hardware/hardware');
 const { fetchCPUTemp, fetchCPUAvgClock, fetchCPUPower, fetchCPULoad, fetchCPUFan, fetchCPUModel } = require('./hardware/cpu');
 const { fetchGPUTemp, fetchGPUClock, fetchGPUPower, fetchGPULoad, fetchGPUFan, fetchGPUModel } = require('./hardware/gpu');
-const { fetchMemoryLoad, fetchMemoryUsed, fetchMemoryAvailable, fetchMemoryType, fetchMemoryClock } = require('./hardware/ram');
-const { fetchIPAddress, fetchTrafficInKBps, fetchLatency } = require('./hardware/network');
-const { fetchFsSize } = require('./hardware/storage');
+const { fetchMemoryLoad, fetchMemoryUsed, fetchMemoryAvailable, fetchMemoryType, fetchMemoryList, fetchMemoryClock } = require('./hardware/ram');
+const { fetchIPAddress, fetchNetworkInterfaces, fetchTrafficInKBps, fetchLatency } = require('./hardware/network');
+const { fetchFsSize, fetchDiskLayout } = require('./hardware/storage');
+
+contextBridge.exposeInMainWorld("electron", {
+    sendNotification: (title, body) => ipcRenderer.send("show-notification", { title, body }),
+});
 
 contextBridge.exposeInMainWorld('hardware', {
     getHardwareInfo: async () => await fetchHardwareInfo(),
+    getMainboardModel: async () => await fetchMainboardModel(),
 });
 
 contextBridge.exposeInMainWorld('cpu', {
@@ -33,15 +38,18 @@ contextBridge.exposeInMainWorld('ram', {
     getUsed: async () => await fetchMemoryUsed(),
     getAvailable: async () => await fetchMemoryAvailable(),
     getType: async () => await fetchMemoryType(),
+    getList: async () => await fetchMemoryList(),
     getClock: async () => await fetchMemoryClock(),
 });
 
 contextBridge.exposeInMainWorld('storage', {
     getFsSize: async () => await fetchFsSize(),
+    getDiskLayout: async () => await fetchDiskLayout(),
 });
 
 contextBridge.exposeInMainWorld('network', {
     getIPAddress: async () => await fetchIPAddress(),
+    getInterfaces: async () => await fetchNetworkInterfaces(),
     getTrafficInKBps: async () => await fetchTrafficInKBps(),
     getLatency: async () => await fetchLatency(),
 });

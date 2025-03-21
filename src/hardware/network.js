@@ -11,6 +11,11 @@ async function fetchIPAddress() {
     return null;
 }
 
+async function fetchNetworkInterfaces() {
+    const networkInterfaces = await si.networkInterfaces();
+    return networkInterfaces;
+}
+
 async function fetchLatency() {
     const inetLatency = await si.inetLatency();
     return inetLatency;
@@ -35,4 +40,4 @@ async function fetchTrafficInKBps() {
     return { received, transferred };
 }
 
-module.exports = { fetchIPAddress, fetchTrafficInKBps, fetchLatency };
+module.exports = { fetchIPAddress, fetchNetworkInterfaces, fetchTrafficInKBps, fetchLatency };
